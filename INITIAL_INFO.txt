@@ -1,0 +1,26 @@
+- time machine tool (timemachine.py)
+- take copies of specified files (Backup.py)
+- build history changes over time (BackupHistory.py)
+- list of files that are checked if there are changes since last check (FileStat.py)
+- add files to the configuration file via command line argument (Backup.py, Args.py)
+- the list of files are editable by the user (List.py)
+- location of the file can be passed as a command line argument (File.py)
+- if changed, take copy, else: ignore (FileStat.py)
+- path of the copied files are specified via command line argument, otherwise the dir is related to where script is running - (Backup.py)
+- exception handle for a particular file that is not found (File.py)
+- take a initial copy of the specified files (Backup.py)
+- over time new files can be added, and copies are made (Backup.py)
+- after run the script for the first time, every minute, open the config file (CronJob.py)
+- check the list of file and check if the file has changes since the last check (FileStat.py)
+- overtime there will multiple copies of the files that has built over time
+- compare the previous stage of a file and keep a copy of the file (FileStat.py)
+
+import argparse
+import yaml
+import re
+import pickle
+import sys
+import subprocess
+import logging
+
+from logging.handlers import RotatingFileHandler

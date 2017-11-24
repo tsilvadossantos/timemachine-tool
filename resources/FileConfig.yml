@@ -1,0 +1,8 @@
+#filename:
+  #file_path: {{ file_path }}
+  #modified_date: {{ modified_date }}
+  #description: {{description}}
+
+/Users/tsantos/github/assignment2_python:
+  modified_date: '00-00-0000'
+  description: 'Temp file'
