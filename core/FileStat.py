@@ -1,11 +1,16 @@
 import datetime
 import os
 
-class TimeStamp(object):
+class FileStat(object):
     def __init__(self, fn):
-        self.filename = filename
+        self.filename = fn
+        self.dateTime = ''
 
-    def get_mod_time_stamp(self):
-        timeStamp = os.path.getmtime(self.filename)
-        dateTime = datetime.datetime.fromtimestamp(timestamp)
-        return dateTime
+    def get_time_t(self):
+        """  time_t  /* time of last modification */ """
+        time_t = os.path.getmtime(self.filename)
+        self.dateTime = datetime.datetime.fromtimestamp(time_t)
+        return self.__str__()
+
+    def __str__(self):
+        return str(self.dateTime)

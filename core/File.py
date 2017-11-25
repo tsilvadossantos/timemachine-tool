@@ -6,16 +6,15 @@ class File(object):
     def __init__(self, filename):
         self.filename = filename
 
-    def read_file(self):
+    def read_yaml_file(self):
         try:
             with open(self.filename, "r") as r:
                 data_loaded = yaml.load(r)
-                #list_of_words.append(str(line.strip()).lower())
-        except IOError:
+        except IOError as err:
             return False
         return data_loaded
 
-    def write_to_file(self):
+    def write_to_yam_file(self):
         file_temp = self.filename + '.tmp'
         #node1_version, node2_version = getargs()
         with open(self.filename, 'r') as r:
