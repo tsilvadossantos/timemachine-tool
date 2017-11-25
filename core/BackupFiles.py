@@ -1,27 +1,37 @@
-import shutil
 from core.FileStat import FileStat
 from core.DataModel import DataModel
+from core.File import File
+from core.DataModel import DataModel
+import shutil
 
-class BackupFiles(object):
-    def __init__(self, fn, md, desc):
-        self.file_name = fn
-        self.modified_date = md
-        self.file_description = desc
+
+class BackupFiles(DataModel):
+
+    def __init__(self, config_file):
+        #Read the file by parsing the filename
+        self.f = File(config_file)
+        data_loaded = self.f.read_yaml_file()
+
+        #get a dict of files from config file
+        self.dm = DataModel(data_loaded)
+        self.dm.set_data_model()
 
     def execute_backup(self, backup_dest):
-        list_of_changes_dict = {}
-        for fk, fe in self.file_name.iteritems():
-            fs = FileStat(fe)
-            #check if file last modified_date has changed
-            if fs.get_time_t() != self.modified_date[fk]:
-                print 'different'
-                #dm = DataModel(data_loaded)
-                #dm.set_modified_date_dict(fk)
-                #shutil.copy(f, backup_dest)
-                #update dict object to write to file
-        #        self.modified_date[fk] = fs.get_time_t()
-        #print self.modified_date
+        new_modified_date_dict = {}
+        for fk, fv in self.dm.get_file_name_dict().iteritems():
+            fs = FileStat(fv)
+            #check if file last modified_date changed
+            if fs.get_time_t() != self.dm.get_modified_date_dict()[fk]:
+                #copy files to backup destination
+                self.copy_files(fv, backup_dest)
 
+                #update modified_date dictionary with new modification datetime
+                new_modified_date_dict = self.dm.get_modified_date_dict()
+                new_modified_date_dict[fk] = fs.get_time_t()                
 
-    def remove_files(self):
-        pass
+                #write changes to config file
+                self.f.write_to_yam_file(self.dm.get_file_name_dict(), self.dm.get_modified_date_dict(), self.dm.get_description_dict())
+
+    @staticmethod
+    def copy_files(orig, dst):
+        shutil.copy(orig, dst)
