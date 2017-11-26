@@ -1,31 +1,27 @@
 import os.path
-import yaml
+import json
 import re
 
 class File(object):
     """Read file and return a list of data"""
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, filename = None):
+        if filename != None:
+            self.filename = filename
         self.data_loaded = {}
 
     def read_yaml_file(self):
         try:
             with open(self.filename, "r") as r:
-                self.data_loaded = yaml.load(r)
+                self.data_loaded = json.load(r)
         except IOError as err:
             return False
         return self.data_loaded
 
-    def write_to_yam_file(self, yaml_dump_list):
+    def write_to_yam_file(self, dict_dump):
+        jdump = (json.dumps(dict_dump, indent=4))
         file_temp = self.filename + '.yml'
-        print yaml_dump_list
-        ptn1 = 'file'
-        with open(file_temp, 'w') as w:
-            for dl in yaml_dump_list:
-                if 'description' in dl:
-                    print re.sub(r'\b{}\b'.format('description'), '- description', dl)
-                
-            #w.write(dl)
+        with open(file_temp, 'a') as append_file:
+            append_file.write(jdump)
         #os.rename(self.filename, self.filename + '.bkp')
         #os.rename(file_temp, self.filename)
 
