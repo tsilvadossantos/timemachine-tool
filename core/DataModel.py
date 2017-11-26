@@ -1,3 +1,7 @@
+import re
+import yaml
+import json
+
 class DataModel(object):
 
     def __init__(self, dl):
@@ -29,3 +33,13 @@ class DataModel(object):
 
     def get_description_dict(self):
         return self.description
+
+    def generate_temp_data_model(self, new_date, fname, desc):
+        new_load = {}
+        new_list = []
+        for di, data in enumerate(self.data_loaded):
+            new_load['description'] = desc[di]
+            new_load['file'] = fname[di]
+            new_load['modified_date'] = new_date[di]
+            new_list.append(yaml.dump(new_load, default_flow_style=False))
+        return new_list
