@@ -17,8 +17,11 @@ class DataModelObserver(DataModel):
         return self.new_load
 
     def generate_json_dump(self, file_id, desc, fname, modified_date):
+        list_data = []
         for id_key, id_value in file_id.items():
             get_values = [id_value, desc[id_value], fname[id_value], modified_date[id_value]]
             list_data.append(get_values)
 
         list_collection = (zip(list_data))
+
+        print list_collection
