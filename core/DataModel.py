@@ -9,7 +9,7 @@ class DataModel(object):
         self.file_id = {}
         self.file_name = {}
         self.modified_date = {}
-        self.description = {}        
+        self.description = {}
 
     def set_data_model(self):
         for datamodel_i in xrange(0, len(self.data_loaded['file_descriptor']), 1):

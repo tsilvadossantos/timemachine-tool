@@ -1,5 +1,8 @@
 from File import File
 from DataModel import DataModel
+import json
+from collections import defaultdict
+import pprint
 
 class DataModelObserver(DataModel):
     def __init__(self, config_file):
@@ -14,13 +17,8 @@ class DataModelObserver(DataModel):
         return self.new_load
 
     def generate_json_dump(self, file_id, desc, fname, modified_date):
-        new_load_dict_temp = {}
-        new_load_dict_temp['file_descriptor'] = {}
-        for id_value in file_id.values():
-            new_load_dict_temp['file_descriptor']['file_id'] = id_value
-            new_load_dict_temp['file_descriptor']['description'] = desc[id_value]
-            new_load_dict_temp['file_descriptor']['file'] = fname[id_value]
-            new_load_dict_temp['file_descriptor']['modified_date'] = modified_date[id_value]
-            self.set_new_load_dict(new_load_dict_temp)
-            print self.get_new_load_dict()
-        #self.f.write_to_yam_file(self.get_new_load_dict())
+        for id_key, id_value in file_id.items():
+            get_values = [id_value, desc[id_value], fname[id_value], modified_date[id_value]]
+            list_data.append(get_values)
+
+        list_collection = (zip(list_data))

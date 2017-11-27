@@ -43,9 +43,8 @@ class BackupFiles(DataModel):
                 modification_date_history[fk] = copy_of_old_timestamp, copy_of_new_timestamp
 
         #request changes from DataModelObserver
-        if flag > 0:
-            dmo = DataModelObserver(self.config_file)
-            dmo.generate_json_dump(self.dm.get_file_id_dict(), self.dm.get_description_dict(), self.dm.get_file_name_dict(), self.dm.get_modified_date_dict())
+        dmo = DataModelObserver(self.config_file)
+        dmo.generate_json_dump(self.dm.get_file_id_dict(), self.dm.get_description_dict(), self.dm.get_file_name_dict(), self.dm.get_modified_date_dict())
 
 
         #self.f.write_to_yam_file(data_dump)

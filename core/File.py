@@ -17,7 +17,7 @@ class File(object):
             return False
         return self.data_loaded
 
-    def write_to_yam_file(self, dict_dump):
+    def write_to_json_file(self, dict_dump):
         jdump = (json.dumps(dict_dump, indent=4))
         file_temp = self.filename + '.yml'
         with open(file_temp, 'a') as append_file:
