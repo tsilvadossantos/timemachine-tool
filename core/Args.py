@@ -9,15 +9,21 @@ class Args(object):
             self.backupdest = bd
         parser = argparse.ArgumentParser(description='Time Machine Application - File Backup Periodically')
         parser.add_argument('-f', '--file', type=str, default = 'resources/FileConfig.yml',
-                            help='path to config file', required=True, nargs='+')
+                            help='path to config file')
         parser.add_argument('-bd', '--backupdestination', type=str, default = 'backup_dest',
-                            help='path backup', required=True, nargs='+')
+                            help='path backup')
         self.args = parser.parse_args()
-        self.set_args(self.args)
+        self.set_filename_arg(self.args)
+        self.set_backupdest_arg(self.args)
 
-    def set_args(self, args):
+    def set_filename_arg(self, args):
         self.filename = args.file
+
+    def get_filename_arg(self):
+        return self.filename
+
+    def set_backupdest_arg(self, args):
         self.backupdest = args.backupdestination
 
-    def get_args(self):
-        return self.filename, self.backupdest
+    def get_backupdest_arg(self):
+        return self.backupdest
