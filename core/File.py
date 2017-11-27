@@ -20,10 +20,10 @@ class File(object):
     def write_to_json_file(self, dict_dump):
         jdump = (json.dumps(dict_dump, indent=4))
         file_temp = self.filename + '.yml'
-        with open(file_temp, 'a') as append_file:
+        with open(file_temp, 'w') as append_file:
             append_file.write(jdump)
-        #os.rename(self.filename, self.filename + '.bkp')
-        #os.rename(file_temp, self.filename)
+        os.rename(self.filename, self.filename + '.bkp')
+        os.rename(file_temp, self.filename)
 
     def verify_file_exists(self):
         if os.path.isfile(self.filename):
