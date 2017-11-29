@@ -41,6 +41,6 @@ class Encode(object):
             os.mkdir(log_dir)
         else:
             dtime = strftime("%Y-%m-%d-%H-%M-%S", gmtime())
-            os.rename(log_dir + '/' + log_name, log_dir + '/' + log_name + '.' + dtime)
+            #os.rename(log_dir + '/' + log_name, log_dir + '/' + log_name + '.' + dtime)
             f = File('logs/file_changes.log')
             f.write_to_json_file(self.get_encode())
