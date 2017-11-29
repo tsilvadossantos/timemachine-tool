@@ -18,7 +18,7 @@ class Args(object):
             self.list_config = list_config
 
         parser = argparse.ArgumentParser(description='Time Machine Application - File Backup Periodically')
-        parser.add_argument('-f', '--file', type=str, default = 'resources/FileConfig.yml',
+        parser.add_argument('-f', '--file', type=str, default = 'resources/FileConfig.json',
                             help='path to config file')
         parser.add_argument('-bd', '--backupdestination', type=str, default = 'backup_dest',
                             help='path backup')

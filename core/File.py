@@ -1,6 +1,7 @@
 import os.path
 import json
 import re
+import sys
 
 class File(object):
     """Read file and return a list of data"""
@@ -15,19 +16,19 @@ class File(object):
                 self.data_loaded = json.load(r)
         except IOError as err:
             print err
-            return False
+            sys.exit(1)
         return self.data_loaded
 
-    def write_to_json_file(self, dict_dump, mode):
+    def write_to_json_file(self, dict_dump):
         jdump = (json.dumps(dict_dump, indent=4))
-        file_temp = self.filename + '.yml'
+        file_temp = self.filename + '.json'
         try:
-            with open(file_temp, mode) as append_file:
+            with open(file_temp, 'w') as append_file:
                 append_file.write(jdump)
             os.rename(file_temp, self.filename)
         except TypeError as err:
             print err
-            return False
+            sys.exit(1)
 
     def verify_file_exists(self):
         if os.path.isfile(self.filename):

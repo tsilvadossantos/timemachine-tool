@@ -1,8 +1,9 @@
 from File import File
 from FileStat import FileStat
 from DataModel import DataModel
-from DataModelObserver import DataModelObserver
+from Encode import Encode
 from BackupHistory import BackupHistory
+from DataModelController import DataModelController
 from Args import Args
 import shutil
 import os
@@ -13,49 +14,38 @@ class BackupFiles(DataModel):
         self.config_file = config_file
 
     def execute_backup(self, backupdest):
-        #make_initial_setup (open file and load data)
-        #Read the file by parsing the filename
-        self.f = File(self.config_file)
-        self.data_loaded = self.f.read_yaml_file()
-
-        #each line of the config file is returned as an independent entity represented by a dictionary
-        self.dm = DataModel(self.data_loaded)
-        self.dm.set_data_model()
-
-        #list to append modified dates
-        modification_date_history = []
+        flush_history = {}
+        #get initial data for backup
+        dc = DataModelController(self.config_file)
+        f_id, f_name, f_mdate, f_desc = dc.initialize_data_model()
 
         #iterate over the dictionary of files to check each modified_date timestamp
-        for fk, fv in self.dm.get_file_name_dict().iteritems():
-            fs = FileStat(fv)
+        for obj_id, fn in f_name.iteritems():
+            fs = FileStat(fn)
+            last_modified_date = fs.get_time_t()
 
             #if file is not present in backupdir - backup is created for the first time
-            f = fv.split('/')[-1] #remove absolute path from file attribute
+            f = fn.split('/')[-1] #remove absolute path from file attribute
             if self.is_file_in_backupdir(f, backupdest):
-                self.copy_files(fv, backupdest)
+                self.copy_files(fn, backupdest)
 
             #ELSE: check if file last modified_date changed
-            elif fs.get_time_t() != self.dm.get_modified_date_dict()[fk]:
+            elif last_modified_date != f_mdate[obj_id]:
                 #copy files to backup destination
-                self.copy_files(fv, backupdest)
+                self.copy_files(fn, backupdest)
 
-                #update modified_data value for modified_date[fk]
-                copy_of_old_timestamp = self.dm.get_modified_date_dict()[fk]
-                dm.update_modified_data_dict(10)
-                self.dm.set_modified_date_dict(None, fk, fs.get_time_t())
+                #update entity: entity name, id, value to be updated, and the filename as reference
+                cached_data = {}
+                cached_data = dc.update_entity(f_mdate, obj_id, last_modified_date)
+                flush_history.update(cached_data)
 
-                #Log in file changes
-                #setup modification record with filename_id and old and new timestamp
-                copy_of_new_timestamp = self.dm.get_modified_date_dict()[fk]
-                list_of_changes = fv, copy_of_old_timestamp, copy_of_new_timestamp
-                modification_date_history.append(list_of_changes)
+        #Encode entities to required format
+        encode = Encode(self.config_file)
+        encode.json_dump_model(f_id, f_desc, f_name, f_mdate)
 
-        #issue change history to BackupHistory
-        self.create_backup_history(modification_date_history)
-
-        #request changes from DataModelObserver by issuing all entities
-        dmo = DataModelObserver(self.config_file)
-        dmo.generate_json_config_dump(self.dm.get_file_id_dict(), self.dm.get_description_dict(), self.dm.get_file_name_dict(), self.dm.get_modified_date_dict(), 'w')
+        #flush history to file if exists
+        if flush_history:
+            encode.json_dump_history(flush_history)
 
     @staticmethod
     def copy_files(orig, dst):
@@ -66,8 +56,3 @@ class BackupFiles(DataModel):
         if filename not in list_of_backups:
             return True
         return None
-
-    def create_backup_history(self, mh):
-        #issue change history to BackupHistory
-        bkph = BackupHistory()
-        bkph.set_backup_history(mh)
