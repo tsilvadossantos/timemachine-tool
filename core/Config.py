@@ -1,7 +1,5 @@
-from File import File
-from DataModel import DataModel
-from DataModelObserver import DataModelObserver
-from FileStat import FileStat
+from DataModelController import DataModelController
+import json
 
 class Config(object):
     def __init__(self, config_file):
@@ -38,17 +36,19 @@ class Config(object):
         #dmo.generate_json_config_dump(dm.get_file_id_dict(), description, filename, modified_date, 'w')
 
     def list_config(self, config_file):
-        #Read the file by parsing the filename
-        f = File(config_file)
-        data_loaded = f.read_yaml_file()
-        #read config file by instantiating the DataModel
-        dm = DataModel(data_loaded)
-        dm.set_data_model()
-        self.display_config(dm.get_file_name_dict())
+        #initialize data by calling the controller
+        dc = DataModelController(self.config_file)
+        dc.initialize_data_model()
+        f_id, f_name, f_mdate, f_desc = dc.initialize_data_model()
+        self.display_config_file(f_id, f_name, f_mdate, f_desc)
 
     def remove_config(self, filename):
         pass
 
-    def display_config(self, filedict):
-        for filename in filedict.values():
-            print 'Added: {}'.format(filename)
+    def display_config_file(self, f_id, f_name, f_mdate, f_desc):
+        inner_data = {}
+        self.encode = {'file_descriptor': []}
+        for id_key, id_value in f_id.items():
+            inner_data = {}
+            inner_data = {'file_id' : id_value, 'description' : f_desc[id_value], 'file' : f_name[id_value], 'modified_date' : f_mdate[id_value]}
+            print json.dumps(inner_data, indent=2, ensure_ascii=False)

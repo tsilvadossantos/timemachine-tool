@@ -2,7 +2,6 @@ from File import File
 from FileStat import FileStat
 from DataModel import DataModel
 from Encode import Encode
-from BackupHistory import BackupHistory
 from DataModelController import DataModelController
 from Args import Args
 import shutil
