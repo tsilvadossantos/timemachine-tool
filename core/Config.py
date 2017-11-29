@@ -1,4 +1,5 @@
-from DataModelController import DataModelController
+from EntityManagement import EntityManagement
+from Encode import Encode
 import json
 
 class Config(object):
@@ -6,44 +7,28 @@ class Config(object):
         self.config_file = config_file
 
     def add_config(self, filename, description = None):
-        #Read the file by parsing the filename
-        f = File(self.config_file)
-        data_loaded = f.read_yaml_file()
+        #request entity management to add new entity
+        dc = EntityManagement(self.config_file)
+        f_id, f_name, f_mdate, f_desc = dc.add_entity(filename, description)
 
-        #get data model loaded to obtain new file id
-        dm = DataModel(data_loaded)
-        dm.set_data_model()
-
-        #generate new file_id
-        dm.set_file_id_dict()
-        dm.update_modified_data_dict(10) #add new class ManageDataModel
-
-        print dm.get_modified_date_dict()
-
-
-
-
-
-
-        #Get new file timestamp (last modified date)
-        fs = FileStat(filename)
-        modified_date = fs.get_time_t()
-
-        #append values to DataModel
-
-        #request changes from DataModelObserver by issuing all entities
-        #dmo = DataModelObserver(self.config_file)
-        #dmo.generate_json_config_dump(dm.get_file_id_dict(), description, filename, modified_date, 'w')
+        #Encode new entities to json and make it persistence
+        dmo = Encode(self.config_file)
+        dmo.json_dump_model(f_id, f_desc, f_name, f_mdate)
 
     def list_config(self, config_file):
-        #initialize data by calling the controller
-        dc = DataModelController(self.config_file)
-        dc.initialize_data_model()
-        f_id, f_name, f_mdate, f_desc = dc.initialize_data_model()
+        #Request entity management to list entities
+        dc = EntityManagement(self.config_file)
+        f_id, f_name, f_mdate, f_desc = dc.list_entity()
         self.display_config_file(f_id, f_name, f_mdate, f_desc)
 
     def remove_config(self, filename):
-        pass
+        #Request entity management to remove a member of the entity
+        dc = EntityManagement(self.config_file)
+        f_id, f_name, f_mdate, f_desc = dc.remove_entity(filename)
+
+        #Encode new entities to json and make it persistence
+        dmo = Encode(self.config_file)
+        dmo.json_dump_model(f_id, f_desc, f_name, f_mdate)
 
     def display_config_file(self, f_id, f_name, f_mdate, f_desc):
         inner_data = {}

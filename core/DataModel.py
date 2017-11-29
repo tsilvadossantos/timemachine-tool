@@ -11,13 +11,20 @@ class DataModel(object):
         self.f_mdate = {}
         self.f_desc = {}
         self.wild_card = {}
-        self.serial_number = -1
+        self.id_key_serial = -1
+        self.id_value_serial = 0
 
-    def set_serial_number(self):
-        self.serial_number += 1
+    def set_id_key_serial(self):
+        self.id_key_serial += 1
 
-    def get_serial_number(self):
-        return self.serial_number
+    def get_id_key_serial(self):
+        return self.id_key_serial
+
+    def set_id_value_serial(self):
+        self.id_value_serial += 1
+
+    def get_id_value_serial(self):
+        return self.id_value_serial
 
     def set_data_model(self):
         for datamodel_i in xrange(0, len(self.data_loaded['file_descriptor']), 1):
@@ -29,8 +36,9 @@ class DataModel(object):
             self.set_f_desc(id_k, id_v)
 
     def set_file_id(self, datamodel_i = None, filter_string = 'file_id'):
-        self.set_serial_number()
         self.file_id[datamodel_i] = self.data_loaded['file_descriptor'][datamodel_i][filter_string]
+        self.set_id_key_serial()
+        self.set_id_value_serial()
 
     def get_file_id(self):
         return self.file_id
@@ -46,10 +54,6 @@ class DataModel(object):
 
     def get_f_mdate(self):
         return self.f_mdate
-
-    def update_modified_data(self, value):
-        self.wild_card[self.get_serial_number() + 1] = value
-        self.f_mdate.update(self.wild_card)
 
     def set_f_desc(self, data_index, file_id, filter_string = 'description'):
         self.f_desc[file_id] = self.data_loaded['file_descriptor'][data_index][filter_string]

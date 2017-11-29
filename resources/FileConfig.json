@@ -1,16 +1,28 @@
 {
     "file_descriptor": [
         {
-            "modified_date": "2017-11-29 11:44:27", 
-            "file_id": 1, 
-            "file": "/Users/tsantos/github/assignment2_python/sample_files/file1", 
-            "description": "File 1"
-        }, 
-        {
-            "modified_date": "2017-11-29 11:44:28", 
-            "file_id": 2, 
-            "file": "/Users/tsantos/github/assignment2_python/sample_files/file2", 
+            "modified_date": "2017-11-29 11:44:28",
+            "file_id": 2,
+            "file": "sample_files/file2",
             "description": "File 2"
+        },
+        {
+            "modified_date": "2017-11-29 08:20:22",
+            "file_id": 3,
+            "file": "sample_files/file3",
+            "description": null
+        },
+        {
+            "modified_date": "2017-11-29 08:20:22",
+            "file_id": 4,
+            "file": "sample_files/file4",
+            "description": null
+        },
+        {
+            "modified_date": "2017-11-29 08:20:22",
+            "file_id": 5,
+            "file": "sample_files/file5",
+            "description": null
         }
     ]
 }

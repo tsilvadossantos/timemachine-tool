@@ -2,7 +2,7 @@ from File import File
 from FileStat import FileStat
 from DataModel import DataModel
 from Encode import Encode
-from DataModelController import DataModelController
+from EntityManagement import EntityManagement
 from Args import Args
 import shutil
 import os
@@ -14,9 +14,9 @@ class BackupFiles(DataModel):
 
     def execute_backup(self, backupdest):
         flush_history = {}
-        #get initial data for backup
-        dc = DataModelController(self.config_file)
-        f_id, f_name, f_mdate, f_desc = dc.initialize_data_model()
+        #Request entity management to list entities
+        dc = EntityManagement(self.config_file)
+        f_id, f_name, f_mdate, f_desc = dc.list_entity()
 
         #iterate over the dictionary of files to check each modified_date timestamp
         for obj_id, fn in f_name.iteritems():
