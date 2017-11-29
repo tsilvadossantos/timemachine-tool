@@ -18,11 +18,11 @@ class File(object):
             return False
         return self.data_loaded
 
-    def write_to_json_file(self, dict_dump):
+    def write_to_json_file(self, dict_dump, mode):
         jdump = (json.dumps(dict_dump, indent=4))
         file_temp = self.filename + '.yml'
         try:
-            with open(file_temp, 'w') as append_file:
+            with open(file_temp, mode) as append_file:
                 append_file.write(jdump)
             os.rename(file_temp, self.filename)
         except TypeError as err:

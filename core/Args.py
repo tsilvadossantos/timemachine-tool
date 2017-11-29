@@ -1,14 +1,17 @@
 import argparse
+import sys
 
 class Args(object):
     """Get command line arguments"""
-    def __init__(self, fp = None, bd = None, add_file = None, rem_file = None, list_config = None):
+    def __init__(self, fp = None, bd = None, add_file = None, rem_file = None, list_config = None, desc = None):
         if fp is None:
             self.filename = fp
         if bd is None:
             self.backupdest = bd
         if add_file is None:
             self.add_file = add_file
+        if desc is None:
+            self.desc = desc
         if rem_file is None:
             self.rem_file = rem_file
         if list_config is None:
@@ -20,7 +23,9 @@ class Args(object):
         parser.add_argument('-bd', '--backupdestination', type=str, default = 'backup_dest',
                             help='path backup')
         parser.add_argument('-add', '--addfile', type=str, default = None,
-                            help='add file to config')
+                            help='add file to config - description is mandatory as a second parameter')
+        parser.add_argument('-desc', '--filedescription', type=str, default = None,
+                            help='add description to added file')
         parser.add_argument('-remove', '--removefile', type=str, default = None,
                             help='remove file from config')
         parser.add_argument('-list', '--listconfig', type=str, default = None,
@@ -30,6 +35,7 @@ class Args(object):
         self.set_config_file_arg(self.args)
         self.set_backupdest_arg(self.args)
         self.set_add_file_arg(self.args)
+        self.set_file_desc_arg(self.args)
         self.set_remove_file_arg(self.args)
         self.set_list_config_arg(self.args)
 
@@ -50,6 +56,12 @@ class Args(object):
 
     def get_add_file_arg(self):
         return self.add_file
+
+    def set_file_desc_arg(self, args):
+        self.desc = args.filedescription
+
+    def get_file_desc_arg(self):
+        return self.desc
 
     def set_remove_file_arg(self, args):
         self.rem_file = args.removefile

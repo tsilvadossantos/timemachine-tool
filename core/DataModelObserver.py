@@ -4,6 +4,7 @@ import json
 from collections import defaultdict
 
 class DataModelObserver(DataModel):
+    
     def __init__(self, config_file):
         self.config_file = config_file
         self.encode_dict = {'file_descriptor': []}
@@ -21,7 +22,7 @@ class DataModelObserver(DataModel):
     def get_log_dict(self):
         return self.log_dict
 
-    def generate_json_config_dump(self, file_id, desc, fname, modified_date):
+    def generate_json_config_dump(self, file_id, desc, fname, modified_date, mode):
         inner_dict = {}
         for id_key, id_value in file_id.items():
             inner_dict = {'file_id' : id_value, 'description' : desc[id_value], 'file' : fname[id_value], 'modified_date' : modified_date[id_value]}
@@ -29,9 +30,9 @@ class DataModelObserver(DataModel):
 
         #Write to config file
         f = File(self.config_file)
-        f.write_to_json_file(self.get_encode_dict())
+        f.write_to_json_file(self.get_encode_dict(), mode)
 
-    def generate_json_log_dump(self, change_history):
+    def generate_json_log_dump(self, change_history, mode):
         inner_dict = {}
         for chg in change_history:
             inner_dict = {'last_modified' : chg}
@@ -39,4 +40,4 @@ class DataModelObserver(DataModel):
 
         #Write to log file
         f = File('logs/file_changes.log')
-        f.write_to_json_file(self.get_log_dict())
+        f.write_to_json_file(self.get_log_dict(), mode)

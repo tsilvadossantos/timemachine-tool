@@ -41,6 +41,7 @@ class BackupFiles(DataModel):
 
                 #update modified_data value for modified_date[fk]
                 copy_of_old_timestamp = self.dm.get_modified_date_dict()[fk]
+                dm.update_modified_data_dict(10)
                 self.dm.set_modified_date_dict(None, fk, fs.get_time_t())
 
                 #Log in file changes
@@ -54,7 +55,7 @@ class BackupFiles(DataModel):
 
         #request changes from DataModelObserver by issuing all entities
         dmo = DataModelObserver(self.config_file)
-        dmo.generate_json_config_dump(self.dm.get_file_id_dict(), self.dm.get_description_dict(), self.dm.get_file_name_dict(), self.dm.get_modified_date_dict())
+        dmo.generate_json_config_dump(self.dm.get_file_id_dict(), self.dm.get_description_dict(), self.dm.get_file_name_dict(), self.dm.get_modified_date_dict(), 'w')
 
     @staticmethod
     def copy_files(orig, dst):
