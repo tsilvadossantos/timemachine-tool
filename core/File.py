@@ -28,7 +28,7 @@ class File(object):
                 append_file.write(jdump)
             os.rename(file_temp, self.filename)
         except:
-            print 'File while writing to file {}'.format(self.filename)
+            print 'Error to write to file: {}'.format(self.filename)
             sys.exit(1)
 
     def verify_file_exists(self):

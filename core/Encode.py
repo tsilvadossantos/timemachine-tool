@@ -1,6 +1,7 @@
+from time import gmtime, strftime
 from File import File
 import json
-from collections import defaultdict
+import os
 
 class Encode(object):
 
@@ -33,6 +34,13 @@ class Encode(object):
             inner_data = {'file_id' : id_key, 'last_two_changes' : id_value}
             self.set_encode('file_last_modification', inner_data)
 
-        #Write to log file
-        f = File('logs/file_changes.log')
-        f.write_to_json_file(self.get_encode())
+        # prepare log dir and write to log file
+        log_dir = 'logs'
+        log_name = 'main.log'
+        if not os.path.isdir(log_dir):
+            os.mkdir(log_dir)
+        else:
+            dtime = strftime("%Y-%m-%d-%H-%M-%S", gmtime())
+            os.rename(log_dir + '/' + log_name, log_dir + '/' + log_name + '.' + dtime)
+            f = File('logs/file_changes.log')
+            f.write_to_json_file(self.get_encode())
