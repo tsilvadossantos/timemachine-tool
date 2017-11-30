@@ -9,6 +9,8 @@ class File(object):
         if filename != None:
             self.filename = filename
         self.data_loaded = {}
+        self.main_log_path = 'logs/main.log'
+        self.error_log = 'logs/error.log'
 
     def read_yaml_file(self):
         try:
@@ -16,22 +18,24 @@ class File(object):
                 self.data_loaded = json.load(r)
                 return self.data_loaded
         except:
-            print 'Error reading the file or file not found: {}'.format(self.filename)
-            sys.exit(1)
+            print 'Error reading the file or file not found: {}'.format(self.filename) #some stdout to user
+            self.commit_to_log_file('Error: Failed to add file / File is already added to ' + filename, self.error_log)
+            self.abort_operation()
         return None
 
-    def write_to_json_file(self, dict_dump):
-        jdump = (json.dumps(dict_dump, indent=4))
-        file_temp = self.filename + '.json'
+    def write_to_file(self, stream, mode):
         try:
-            with open(file_temp, 'w') as append_file:
-                append_file.write(jdump)
-            os.rename(file_temp, self.filename)
+            f = open(self.filename, mode)
+            f.write(stream)
+            f.close()
         except:
-            print 'Error to write to file: {}'.format(self.filename)
-            sys.exit(1)
+            print 'Error to write to file: {}'.format(self.filename) #some stdout to user
+            self.commit_to_log_file('Error: Failed to add file / File is already added to ' + filename, self.error_log)
+            self.abort_operation()
 
-    def verify_file_exists(self):
-        if os.path.isfile(self.filename):
-            return True
-        return False
+    def commit_to_log_file(self, msg, log_path):
+        log = Log(log_path)
+        log.commit_log(msg)
+
+    def abort_operation(self):
+        sys.exit(1)

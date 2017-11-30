@@ -46,27 +46,26 @@ class EntityManagement(DataModel):
 
         #if file is present in config_file
         if self.search_member_entity(filename, f_name):
-            print 'File is already present in {}'.format(self.config_file)
-            #abort operation
-            sys.exit(1)
+            return None
+        else:
+            #add new file_id entity
+            file_id_key = self.get_id_key_serial() + 1
+            file_id_value = self.get_id_value_serial() + 1
+            f_id[file_id_key] = file_id_value
 
-        #add new file_id entity
-        file_id_key = self.get_id_key_serial() + 1
-        file_id_value = self.get_id_value_serial() + 1
-        f_id[file_id_key] = file_id_value
+            #add new file entity
+            f_name[file_id_value] = filename
 
-        #add new file entity
-        f_name[file_id_value] = filename
+            #add new modified_date entit
+            fs = FileStat(filename)
+            last_modified_date = fs.get_time_t()
+            f_mdate[file_id_value] = last_modified_date
 
-        #add new modified_date entit
-        fs = FileStat(filename)
-        last_modified_date = fs.get_time_t()
-        f_mdate[file_id_value] = last_modified_date
+            #add new file description entity
+            f_desc[file_id_value] = description
+            return f_id, f_name, f_mdate, f_desc
 
-        #add new file description entity
-        f_desc[file_id_value] = description
-
-        return f_id, f_name, f_mdate, f_desc
+        return None
 
     def remove_entity(self, filename):
         #initialize data
@@ -75,18 +74,20 @@ class EntityManagement(DataModel):
         #if file is not present in config_file
         if self.search_member_entity(filename, f_name):
             key_found = self.search_member_entity(filename, f_name)
+            #pop ou the member from all entities
+            for k, v in f_id.iteritems():
+                if v == key_found:
+                    f_id_key = k
+            if f_id_key:
+                f_id.pop(f_id_key)
+                f_name.pop(key_found)
+                f_mdate.pop(key_found)
+                f_desc.pop(key_found)
+                return f_id, f_name, f_mdate, f_desc
         else:
-            print 'File is not present in {}'.format(self.config_file)
-            sys.exit(1)
+            return None
 
-        #pop ou the member from all entities
-        f_id.pop(key_found - 1)
-        f_name.pop(key_found)
-        f_mdate.pop(key_found)
-        f_desc.pop(key_found)
-
-        return f_id, f_name, f_mdate, f_desc
-
+        return None
 
     def list_entity(self):
         return self.initialize_data_model()
