@@ -3,6 +3,7 @@ from File import File
 from Encode import Encode
 from Log import Log
 import sys
+import json
 
 class Config(object):
     def __init__(self, config_file):
@@ -67,8 +68,10 @@ class Config(object):
 
     def display_config_file(self, f_id, f_name, f_mdate, f_desc):
         inner_data = {}
-        self.encode = {'file_descriptor': []}
         for id_key, id_value in f_id.items():
             inner_data = {}
             inner_data = {'file_id' : id_value, 'description' : f_desc[id_value], 'file' : f_name[id_value], 'modified_date' : f_mdate[id_value]}
-            print json.dumps(inner_data, indent=2, ensure_ascii=False)
+            if inner_data:
+                print json.dumps(inner_data, indent=2, ensure_ascii=False)
+        if not inner_data:
+            print 'Config file is empty: {}'.format(self.config_file)
