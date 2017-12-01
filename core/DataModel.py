@@ -4,8 +4,9 @@ from core.File import File
 
 class DataModel(object):
 
-    def __init__(self, dl):
-        self.data_loaded = dl
+    def __init__(self, dl = None):
+        if dl != None:
+            self.data_loaded = dl
         self.file_id = {}
         self.f_name = {}
         self.f_mdate = {}

@@ -1,15 +1,9 @@
 {
     "file_descriptor": [
         {
-            "modified_date": "2017-11-30 17:51:32", 
+            "modified_date": "2017-12-01 11:45:52", 
             "file_id": 2, 
             "file": "sample_files/file2", 
-            "description": "File 2"
-        }, 
-        {
-            "modified_date": "2017-11-30 09:46:39", 
-            "file_id": 3, 
-            "file": "sample_files/file3", 
             "description": null
         }
     ]

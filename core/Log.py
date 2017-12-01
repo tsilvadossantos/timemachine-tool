@@ -33,8 +33,8 @@ class Log(object):
             self.set_cached_log_entries(temp_data)
             self.flush_data()
         else:
-            for k, v in entity.iteritems():
-                log_entry_body = '{} file_id:{} - {}'.format(msg, str(k), v)
+            for k in entity.keys():
+                log_entry_body = '{} file_id:{}'.format(msg, str(k))
                 self.set_timestamp()
                 temp_data[self.get_timestamp()] = log_entry_body
                 self.set_cached_log_entries(temp_data)

@@ -14,9 +14,9 @@ if __name__ == '__main__':
     config_file_name = args.get_list_config_arg()
 
     #backup files
-    bkp = BackupFiles(config_file)
+    #bkp = BackupFiles(config_file)
     #execute main program functionality - Make a backup
-    bkp.execute_backup(backup_path)
+    #bkp.execute_backup(backup_path)
 
     #verify which argument has passed on cli to call the related method
     #a file is been added to config_file?

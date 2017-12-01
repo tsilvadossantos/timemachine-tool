@@ -19,7 +19,6 @@ class Config(object):
             #Encode new entities to json and make it persistence
             dmo = Encode(self.config_file)
             jdump = dmo.json_dump_model(f_id, f_desc, f_name, f_mdate)
-            print jdump
             if jdump:
                 #commit changes to file
                 self.commit_to_config_file(jdump)
@@ -51,7 +50,7 @@ class Config(object):
                 #save changes to log
                 self.commit_to_log_file('INFO: Removed file from ' + filename, self.main_log_path)
         else:
-            self.commit_to_log_file('Error: Failed to removed file from ' + filename, self.error_log)
+            self.commit_to_log_file('Error: File:' + filename + ' not found in the configuration file', self.error_log)
             self.abort_operation()
 
     def commit_to_config_file(self, data):

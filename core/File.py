@@ -19,9 +19,7 @@ class File(object):
                 return self.data_loaded
         except:
             print 'Error reading the file or file not found: {}'.format(self.filename) #some stdout to user
-            self.commit_to_log_file('Error: Failed to add file / File is already added to ' + filename, self.error_log)
-            self.abort_operation()
-        return None
+        return False
 
     def write_to_file(self, stream, mode):
         try:
@@ -30,12 +28,7 @@ class File(object):
             f.close()
         except:
             print 'Error to write to file: {}'.format(self.filename) #some stdout to user
-            self.commit_to_log_file('Error: Failed to add file / File is already added to ' + filename, self.error_log)
             self.abort_operation()
-
-    def commit_to_log_file(self, msg, log_path):
-        log = Log(log_path)
-        log.commit_log(msg)
 
     def abort_operation(self):
         sys.exit(1)

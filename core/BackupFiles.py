@@ -12,73 +12,68 @@ class BackupFiles(DataModel):
 
     def __init__(self, config_file):
         self.config_file = config_file
+        self.main_log_path = 'logs/main.log'
+        self.error_log = 'logs/error.log'
+        #Request entity management to list entities
+        self.dc = EntityManagement(self.config_file)
+        self.f_id, self.f_name, self.f_mdate, self.f_desc = self.dc.list_entity()
+
 
     def execute_backup(self, backupdest):
-        main_log_path = 'logs/main.log'
-        change_log_path = 'logs/last_modified_files_from_config.log'
-        error_log = 'logs/error.log'
-        cached_changes = {}
-        #Request entity management to list entities
-        dc = EntityManagement(self.config_file)
-        f_id, f_name, f_mdate, f_desc = dc.list_entity()
+        fs = FileStat()
+        lastest_mdates = fs.check_file_changes(self.f_name)
 
-        #iterate over the dictionary of files to check each modified_date timestamp
-        for obj_id, fn in f_name.iteritems():
-            fs = FileStat(fn)
-            last_modified_date = fs.get_time_t()
+        #verify if there files changed
+        f_updated = self.check_modified_files(lastest_mdates)
 
-            #if file is not present in backupdir - backup is created for the first time
-            f = fn.split('/')[-1] #remove absolute path from file attribute
-            if self.is_file_in_backupdir(f, backupdest):
-                self.copy_files(fn, backupdest)
-                self.commit_to_log_file('INFO: Backup executed successfully', main_log_path, f_name)
+        #backup files if they are not backued up yet
+        absent_files = self.fetch_absent_files_from_backupdir(backupdest)
+        if absent_files:
+            self.copy_new_files(backupdest)
+        #if there are updated files: update entity, append to log and backup file
+        elif f_updated:
+            self.request_entity_update(self.f_mdate, f_updated)
+            self.copy_changed_files(backupdest, f_updated)
+            self.update_config_file()
 
-                #Encode entities to required format
-                encode = Encode(self.config_file)
-                jdump = encode.json_dump_model(f_id, f_desc, f_name, f_mdate)
+    def update_config_file(self):
+        #Encode entities to required format
+        encode = Encode(self.config_file)
+        jdump = encode.json_dump_model(self.f_id, self.f_desc, self.f_name, self.f_mdate)
+        #Request data to be written to file
+        if jdump:
+            self.write_changes(jdump)
+        else:
+            self.commit_to_log_file('Error: Failed to write to ' + self.config_file, error_log)
 
-                #Request data to be written to file
-                if jdump:
-                    self.write_changes(jdump)
-                else:
-                    self.commit_to_log_file('Error: Failed to write to ' + self.config_file, error_log)
+    def copy_new_files(self, backupdest):
+        for k, name in self.f_name.iteritems():
+            shutil.copy(name, backupdest)
+        self.commit_to_log_file('INFO: Backup executed successfully', self.main_log_path, self.f_name)
 
-            #ELSE: check if file last modified_date changed
-            elif last_modified_date != f_mdate[obj_id]:
-                #copy files to backup destination
-                self.copy_files(fn, backupdest)
-                self.commit_to_log_file('INFO: Backup executed successfully', main_log_path, f_name)
+    def copy_changed_files(self, backupdest, entity):
+        cached_files = {}
+        for k, v in entity.iteritems():
+            shutil.copy(self.f_name[k], backupdest)
+            temp_cache = {}
+            temp_cache[k] = v
+            cached_files.update(temp_cache)
+        self.commit_to_log_file('INFO: Backup executed successfully', self.main_log_path, cached_files)
 
-                #update entity: entity name, id, value to be updated, and the filename as reference
-                temp_cache = {}
-                temp_cache = dc.update_entity(f_mdate, obj_id, last_modified_date)
-                cached_changes.update(temp_cache)
-
-                #Encode entities to required format
-                encode = Encode(self.config_file)
-                jdump = encode.json_dump_model(f_id, f_desc, f_name, f_mdate)
-
-                if jdump:
-                    #Request data to be written to file
-                    self.write_changes(jdump)
-                else:
-                    self.commit_to_log_file('Error: Failed to write to ' + self.config_file, error_log)
-
-        #flush history to log file if exists
-        if cached_changes:
-            self.commit_to_log_file('INFO: File modified (last two modifications)', change_log_path, cached_changes)
+    def fetch_absent_files_from_backupdir(self, backupdest):
+        cached_files = {}
+        for k, v in self.f_name.iteritems():
+            #remove absolute path from file attribute
+            filename = v.split('/')[-1]
+            list_of_backups = os.listdir(backupdest)
+            local_cache = {}
+            if filename not in list_of_backups:
+                local_cache[k] = v
+                cached_files.update(local_cache)
+        return cached_files
 
     @staticmethod
-    def copy_files(orig, dst):
-        shutil.copy(orig, dst)
-
-    def is_file_in_backupdir(self, filename, backupdest):
-        list_of_backups = os.listdir(backupdest)
-        if filename in list_of_backups:
-            return False
-        return True
-
-    def commit_to_log_file(self, msg, log_path, entity = None):
+    def commit_to_log_file(msg, log_path, entity = None):
         #log changes
         log = Log(log_path)
         if entity is None:
@@ -89,3 +84,28 @@ class BackupFiles(DataModel):
     def write_changes(self, data):
         f = File(self.config_file)
         f.write_to_file(data, 'w')
+
+    def check_modified_files(self, lastest_mdates):
+        cached_changes = {}
+        for k, v in lastest_mdates.iteritems():
+            if v != self.f_mdate[k]:
+                local_cache = {}
+                local_cache[k] = v
+                cached_changes.update(local_cache)
+        return cached_changes
+
+    def request_entity_update(self, entity, last_modified_data):
+        cached_changes = {}
+        if last_modified_data:
+            for obj_id, last_modified_date in last_modified_data.iteritems():
+                #update entity: entity name, id, value to be updated, and the filename as reference
+                temp_cache = {}
+                temp_cache = self.dc.update_entity(entity, obj_id, last_modified_date)
+                cached_changes.update(temp_cache)
+
+            #flush history to log file if exists
+            if cached_changes:
+                self.commit_to_log_file('INFO: File modified since last Backup', self.main_log_path, cached_changes)
+            return True
+        else:
+            return False
