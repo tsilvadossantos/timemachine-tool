@@ -1,3 +1,10 @@
 {
-    "file_descriptor": []
+    "file_descriptor": [
+        {
+            "modified_date": "2017-12-03 15:40:21", 
+            "file_id": 1, 
+            "file": "sample_files/file1", 
+            "description": "new file using add - well done"
+        }
+    ]
 }

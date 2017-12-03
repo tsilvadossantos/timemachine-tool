@@ -9,6 +9,7 @@ import shutil
 import os
 
 class BackupFiles(DataModel):
+    """Backup files to a specific directory by reading a given configuration file"""
 
     def __init__(self, config_file):
         self.config_file = config_file
@@ -20,6 +21,10 @@ class BackupFiles(DataModel):
 
 
     def execute_backup(self, backupdest):
+        """Backup the files.
+
+        Usage: execute_backup(backup_destination)"""
+        
         fs = FileStat()
         lastest_mdates = fs.check_file_changes(self.f_name)
 

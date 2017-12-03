@@ -6,12 +6,17 @@ import sys
 import json
 
 class Config(object):
+    """Make changes in the configuration file"""
+
     def __init__(self, config_file):
         self.config_file = config_file
         self.main_log_path = 'logs/main.log'
         self.error_log = 'logs/error.log'
 
     def add_config(self, filename, description = None):
+        """add a file to the configuration file list:
+
+        Usage: add_config(/path/to/file, description)"""
         #request entity management to add new entity
         dc = EntityManagement(self.config_file)
         if dc.add_entity(filename, description):
@@ -30,12 +35,18 @@ class Config(object):
             self.abort_operation()
 
     def list_config(self, config_file):
+        """List the content of the configuration file.
+
+        Usage: list_config(/path/to/configurationFile)"""
         #Request entity management to list entities
         dc = EntityManagement(self.config_file)
         f_id, f_name, f_mdate, f_desc = dc.list_entity()
         self.display_config_file(f_id, f_name, f_mdate, f_desc)
 
     def remove_config(self, filename):
+        """remove a file from the configuration file list:
+
+        Usage: remove_config(/path/to/file)"""
         #Request entity management to remove a member of the entity
         dc = EntityManagement(self.config_file)
         if dc.remove_entity(filename):
