@@ -13,21 +13,18 @@ if __name__ == '__main__':
     file_name_rm = args.get_remove_file_arg()
     config_file_name = args.get_list_config_arg()
 
-    #backup files
-    bkp = BackupFiles(config_file)
-
-    #execute main program functionality - Make a backup
-    bkp.execute_backup(backup_path)
-
     #verify which argument has passed on cli to call the related method
     #a file is been added to config_file?
     if file_name_add:
         Config(config_file).add_config(file_name_add, file_desc)
-
     #a file is been removed from config_file?
-    if file_name_rm:
+    elif file_name_rm:
         Config(config_file).remove_config(file_name_rm)
-
     #user is listing files in config_file?
-    if config_file_name:
+    elif config_file_name:
         Config(config_file).list_config(config_file_name)
+    else:
+        #backup files
+        bkp = BackupFiles(config_file)
+        #execute main program functionality - Make a backup
+        bkp.execute_backup(backup_path)
