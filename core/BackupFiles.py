@@ -7,6 +7,8 @@ from Log import Log
 from Args import Args
 import shutil
 import os
+from time import gmtime, strftime
+from datetime import datetime
 
 class BackupFiles(DataModel):
     """Backup files to a specific directory by reading a given configuration file"""
@@ -24,7 +26,7 @@ class BackupFiles(DataModel):
         """Backup the files.
 
         Usage: execute_backup(backup_destination)"""
-        
+
         fs = FileStat()
         lastest_mdates = fs.check_file_changes(self.f_name)
 
@@ -57,8 +59,12 @@ class BackupFiles(DataModel):
         self.commit_to_log_file('INFO: Backup executed successfully', self.main_log_path, self.f_name)
 
     def copy_changed_files(self, backupdest, entity):
+        dtime = datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f")
         cached_files = {}
         for k, v in entity.iteritems():
+            filename = self.f_name[k].split('/')[-1]
+            path_to_file = backupdest + '/' + filename
+            os.rename(path_to_file, path_to_file + '.' + dtime)
             shutil.copy(self.f_name[k], backupdest)
             temp_cache = {}
             temp_cache[k] = v

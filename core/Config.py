@@ -19,9 +19,8 @@ class Config(object):
         Usage: add_config(/path/to/file, description)"""
         #request entity management to add new entity
         dc = EntityManagement(self.config_file)
-        if dc.add_entity(filename, description):
-            f_id, f_name, f_mdate, f_desc = dc.add_entity(filename, description)
-
+        f_id, f_name, f_mdate, f_desc = dc.add_entity(filename, description)
+        if f_id:
             #Encode new entities to json and make it persistence
             dmo = Encode(self.config_file)
             jdump = dmo.json_dump_model(f_id, f_desc, f_name, f_mdate)

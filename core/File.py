@@ -18,7 +18,7 @@ class File(object):
                 self.data_loaded = json.load(r)
                 return self.data_loaded
         except:
-            print 'Error reading the file or file not found: {}'.format(self.filename) #some stdout to user
+            print 'File is new or Error reading the file: {}'.format(self.filename) #some stdout to user
         return False
 
     def write_to_file(self, stream, mode):
