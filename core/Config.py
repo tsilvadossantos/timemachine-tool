@@ -24,7 +24,7 @@ class Config(object):
                 #commit changes to file
                 self.commit_to_config_file(jdump)
                 #save changes to log
-                self.commit_to_log_file('INFO: Added new file to configuration file' + filename, self.main_log_path)
+                self.commit_to_log_file('INFO: Added new file to configuration file ' + filename, self.main_log_path)
         else:
             self.commit_to_log_file('Error: Failed to add file / File is already added to ' + filename, self.error_log)
             self.abort_operation()
