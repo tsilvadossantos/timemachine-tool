@@ -1,4 +1,4 @@
-# Title: TimeMachine Tool - Script to Execute Files Backups Periodically
+# TimeMachine Tool - Script to Execute Files Backups Periodically
 
 ## Application Structure:
 The "fileConfig.json" contain a list of files to have a backup. This files contains:
