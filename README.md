@@ -1,12 +1,13 @@
 #Title: TimeMachine Tool - Script to Execute Files Backups Periodically
 
-#Application Structure:```
+##Application Structure:
 The "fileConfig.json" contain a list of files to have a backup. This files contains:
--- File ID: Uniq and Serialized ID
--- File description: file description provided by the user
--- File name: file name specified by the user in the CLI
--- Modification Date: last modified data, taken from stat
+File ID: Uniq and Serialized ID
+1. - File description: file description provided by the user
+2. -- File name: file name specified by the user in the CLI
+3. -- Modification Date: last modified data, taken from stat
 
+```
 The four attributes of a given file(ID, Name, Description, and Modification Date) are treated in this project as an independent entity, that are managed individually, but any changes in any of the entities are cascaded to each other
 by respecting they relationship.
 
@@ -14,23 +15,22 @@ IMPORTANT: Even though it is possible to, users should not edit the configuratio
 parameters.
 ```
 
-#Usage:
+##Usage:
 
-- To execute backups by running the script:
-`$ python timemachine.py -f resources/FileConfig.json -bd backup_dest`
-or
-`$ python timemachine.py`
+### To execute backups by running the script:
+1. `$ python timemachine.py -f resources/FileConfig.json -bd backup_dest`
+2. `$ python timemachine.py`
 
--add a file to a configuration file (If description is not specified the value will be Null)
-`$ python timemachine.py -add sample_files/file1 -desc 'new file using add - well done'`
+### add a file to a configuration file (If description is not specified the value will be Null)
+1. `$ python timemachine.py -add sample_files/file1 -desc 'new file using add - well done'`
 
--remove file from a configuration file
-`$ python timemachine.py -remove sample_files/file1`
+### remove file from a configuration file
+1. `$ python timemachine.py -remove sample_files/file1`
 
--list configuration file content
+1. -list configuration file content
 `$ python timemachine.py -list resources/FileConfig.json`
 
-#Project Content:
+##Project Content:
 ```
 ├── README.md
 ├── backup_dest - "Backup destination"
@@ -61,7 +61,7 @@ or
 └── timemachine.py - "Application caller"
 ```
 
-#Classes and Methods:
+##Classes and Methods:
 
 ```
 --
