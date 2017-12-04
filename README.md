@@ -35,7 +35,7 @@ parameters.
 ├── README.md
 ├── backup_dest - "Backup destination"
 ├── core
-│   ├── Args.py - `Class to get CLI arguments`
+│   ├── Args.py - "Class to get CLI arguments"
 │   ├── BackupFiles.py - "Class to Execute Backups"
 │   ├── Config.py - "Class to manage the configuration file"
 │   ├── DataModel.py - "Class to create the data model"
