@@ -2,10 +2,10 @@
 
 ## Application Structure:
 The "fileConfig.json" contain a list of files to have a backup. This files contains:
-File ID: Uniq and Serialized ID
-1. - File description: file description provided by the user
-2. -- File name: file name specified by the user in the CLI
-3. -- Modification Date: last modified data, taken from stat
+1. File ID: Uniq and Serialized ID.
+2. File description: file description provided by the user.
+3. File name: file name specified by the user in the CLI.
+4. Modification Date: last modified data, taken from stat.
 
 ```
 The four attributes of a given file(ID, Name, Description, and Modification Date) are treated in this project as an independent entity, that are managed individually, but any changes in any of the entities are cascaded to each other
@@ -35,7 +35,7 @@ parameters.
 ├── README.md
 ├── backup_dest - "Backup destination"
 ├── core
-│   ├── Args.py - "Class to get CLI arguments"
+│   ├── Args.py - `Class to get CLI arguments`
 │   ├── BackupFiles.py - "Class to Execute Backups"
 │   ├── Config.py - "Class to manage the configuration file"
 │   ├── DataModel.py - "Class to create the data model"
