@@ -1,6 +1,6 @@
-#Title: TimeMachine Tool - Script to Execute Files Backups Periodically
+# Title: TimeMachine Tool - Script to Execute Files Backups Periodically
 
-##Application Structure:
+## Application Structure:
 The "fileConfig.json" contain a list of files to have a backup. This files contains:
 File ID: Uniq and Serialized ID
 1. - File description: file description provided by the user
@@ -30,7 +30,7 @@ parameters.
 1. -list configuration file content
 `$ python timemachine.py -list resources/FileConfig.json`
 
-##Project Content:
+## Project Content:
 ```
 ├── README.md
 ├── backup_dest - "Backup destination"
@@ -61,13 +61,11 @@ parameters.
 └── timemachine.py - "Application caller"
 ```
 
-##Classes and Methods:
+## Classes and Methods:
 
-```
---
-Args.py
+1. Args.py
 Class to manage CLI arguments
-
+```
 Methods:
 def set_config_file_arg(self, args): set file config arguments
 def get_config_file_arg(self): get file config arguments
@@ -81,11 +79,12 @@ def set_remove_file_arg(self, args): set remove file arg
 def get_remove_file_arg(self): get remove file arg
 def set_list_config_arg(self, args): set list config files arg
 def get_list_config_arg(self): get list config files arg
---
+```
 
-BackupFiles.py
+
+2. BackupFiles.py
 Class to backup files (Execute Backup)
-
+```
 Methods:
 def execute_backup(self, backupdest): execute the backup
 def update_config_file(self): update configuration file with new file modification date
@@ -96,11 +95,11 @@ def commit_to_log_file(msg, log_path, entity = None): add logging
 def write_changes(self, data): write to file
 def check_modified_files(self, lastest_mdates): check if files have been modified
 def request_entity_update(self, entity, last_modified_data): request observer to update data content
---
+```
 
-Config.py
+3. Config.py
 Class to manage the configuration file (List, Add, Remove)
-
+```
 Methods:
 def add_config(self, filename, description = None): add a file to a specified configuration file
 def list_config(self, config_file): list the configuration file
@@ -109,12 +108,12 @@ def commit_to_config_file(self, data): edit configuration file
 def commit_to_log_file(self, msg, log_path): append to log file
 def abort_operation(self): sys.exit
 def display_config_file(self, f_id, f_name, f_mdate, f_desc): list configuration file content
---
+```
 
-DataModel.py
+4. DataModel.py
 Class to defined the configuration file content as dictionaries and treats each line of the file
 as a different entity: File ID, File Name, File Description, File Modification Date
-
+```
 Methods:
 def set_id_key_serial(self): set serial key serial id for File_ID dictionary Key
 def get_id_key_serial(self): get value serial key serial id for File_ID dictionary Key
@@ -129,20 +128,20 @@ def set_f_mdate(self, data_index, file_id, filter_string = 'modified_date'): Set
 def get_f_mdate(self): get File Modification Dates
 def set_f_desc(self, data_index, file_id, filter_string = 'description'): Set File Description
 def get_f_desc(self): get File Description
---
+```
 
-Encode.py
+5. Encode.py
 Class to encode dictionary to json format.
-
+```
 Methods:
 def set_encode(self, outer_label, inner_data): set json data structure
 def get_encode(self): get json datastructure
 def json_dump_model(self, f_id, f_desc, f_name, f_mdate): encode directory to json
---
+```
 
-EntityManagement.py
+6. EntityManagement.py
 Class to initialize the Data Model and observe changes and updates.
-
+```
 Methods:
 def get_id_key_serial(self): get value serial key serial id for File_ID dictionary Key
 def get_id_value_serial(self): get serial Value serial id for File_ID dictionary Value
@@ -154,29 +153,30 @@ def add_entity(self, filename, description): add new data to entities
 def remove_entity(self, filename): remove data from entities
 def list_entity(self): list an specific entity
 def search_member_entity(self, member, entity): search for a particular member in a given entity
---
+```
 
-File.py
+7. File.py
 Class to call file operations (Read, Write and Append)
-
+```
 Methods:
 def read_yaml_file(self): read a given json file
 def write_to_file(self, stream, mode): read a given json file
 def abort_operation(self): sys.exit
---
+```
 
-FileStat.py
+8. FileStat.py
 Class to check modified date in a given file path.
-
+```
 Methods:
 def set_cached_changes(self, data): method to cache changed data
 def get_cached_changes(self): method to return changed data
 def get_time_t(self, fname): method to get file modified date
 def __str__(self): return a string
 def check_file_changes(self, fname): method to get filename and return changes
---
+```
 
-Log.py
+9. Log.py
+```
 Class to log main application events to log/main.log and log/error.log.
 If not present, folders and files will be created automatically.
 
