@@ -7,13 +7,11 @@ The "fileConfig.json" contain a list of files to have a backup. This files conta
 3. File name: file name specified by the user in the CLI.
 4. Modification Date: last modified data, taken from stat.
 
-```
 The four attributes of a given file(ID, Name, Description, and Modification Date) are treated in this project as an independent entity, that are managed individually, but any changes in any of the entities are cascaded to each other
 by respecting they relationship.
 
 IMPORTANT: Even though it is possible to, users should not edit the configuration file manually in order to avoid errors. In order to add/edit/remove a specific file from the configuration file, user should use: -add or -remove
 parameters.
-```
 
 ##Usage:
 
